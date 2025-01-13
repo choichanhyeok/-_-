@@ -1,3 +1,5 @@
+package chapter1;
+
 import chapter1.리팩토링_실습.code.Theater;
 
 import java.util.ArrayList;
