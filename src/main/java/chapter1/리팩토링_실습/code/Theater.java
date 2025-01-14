@@ -15,7 +15,6 @@ public class Theater {
     }
 
     public String statement() throws Exception {
-        int totalAmount = 0;
 
         return renderPlainText();
     }
