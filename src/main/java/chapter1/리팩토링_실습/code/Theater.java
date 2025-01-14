@@ -6,9 +6,13 @@ import java.util.Locale;
 import java.util.Map;
 
 public class Theater {
+    private final Map<String, Map<String, Object>> plays;
 
-    public String statement(Map<String, Object> invoice,
-                                   Map<String, Map<String, Object>> plays) throws Exception {
+    public Theater(Map<String, Map<String, Object>> plays) {
+        this.plays = plays;
+    }
+
+    public String statement(Map<String, Object> invoice) throws Exception {
 
         int totalAmount = 0;
         int volumeCredits = 0;
@@ -19,7 +23,7 @@ public class Theater {
 
         for (Map<String, Object> perf : (List<Map<String, Object>>) invoice.get("performances")) {
 
-            Map<String, Object> play = plays.get((String) perf.get("playID"));
+            Map<String, Object> play = playFor(perf);
             if (play == null) {
                 throw new Exception("알 수 없는 playID: " + (String) perf.get("playID"));
             }
@@ -72,4 +76,11 @@ public class Theater {
 
         return result;
     }
+
+    private Map<String, Object> playFor(Map<String, Object> aPerformance) {
+
+        return plays.get(aPerformance.get("playID"));
+    }
+
+
 }
