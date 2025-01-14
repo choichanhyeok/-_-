@@ -33,13 +33,13 @@ public class Theater {
             }
 
             result += " " + (String) playFor(perf).get("name") + ": "
-                    + NumberFormat.getCurrencyInstance(Locale.US).format(amountFor(perf) / 100.0)
+                    + usd(amountFor(perf))
                     + " (" + (int) perf.get("audience") + "석)\n";
 
             totalAmount += amountFor(perf);
         }
 
-        result += "총액: " + NumberFormat.getCurrencyInstance(Locale.US).format(totalAmount / 100.0) + "\n";
+        result += "총액: " + usd(totalAmount) + "\n";
         result += "적립 포인트: " + volumeCredits + "점\n";
 
         return result;
@@ -76,6 +76,10 @@ public class Theater {
     private Map<String, Object> playFor(Map<String, Object> aPerformance) {
 
         return plays.get(aPerformance.get("playID"));
+    }
+
+    private String usd(int aNumber) {
+        return NumberFormat.getCurrencyInstance(Locale.US).format(aNumber / 100.0);
     }
 
 
