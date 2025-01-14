@@ -23,20 +23,19 @@ public class Theater {
 
         for (Map<String, Object> perf : (List<Map<String, Object>>) invoice.get("performances")) {
 
-            Map<String, Object> play = playFor(perf);
-            if (play == null) {
+            if (playFor(perf) == null) {
                 throw new Exception("알 수 없는 playID: " + (String) perf.get("playID"));
             }
 
-            int thisAmount = amountFor(play, perf);
+            int thisAmount = amountFor(perf);
 
             volumeCredits += Math.max((int) perf.get("audience") - 30, 0);
 
-            if ("comedy".equals(play.get("type"))) {
+            if ("comedy".equals(playFor(perf).get("type"))) {
                 volumeCredits += Math.floor((int) perf.get("audience") / 5.0);
             }
 
-            result += " " + (String) play.get("name") + ": "
+            result += " " + (String) playFor(perf).get("name") + ": "
                     + format.format(thisAmount / 100.0)
                     + " (" + (int) perf.get("audience") + "석)\n";
 
@@ -50,9 +49,9 @@ public class Theater {
     }
 
 
-    private int amountFor(Map<String, Object> play, Map<String, Object> aPerformance) throws Exception {
+    private int amountFor(Map<String, Object> aPerformance) throws Exception {
         int result = 0;
-        switch ((String) play.get("type")) {
+        switch ((String) playFor(aPerformance).get("type")) {
 
             case "tragedy":
                 result = 40000; // 비극 기본 요금
@@ -71,7 +70,7 @@ public class Theater {
                 break;
 
             default:
-                throw new Exception("알 수 없는 장르: " + play.get("type"));
+                throw new Exception("알 수 없는 장르: " + playFor(aPerformance).get("type"));
         }
 
         return result;
