@@ -14,6 +14,7 @@ public class StatementGeneratorTest {
     public static void main(String[] args) {
 
         /* invoice 세팅하기 */
+        Theater theater = new Theater();
         Map<String, Object> invoice = new HashMap<>();
         invoice.put("customer", "BigCo");
 
@@ -49,7 +50,7 @@ public class StatementGeneratorTest {
 
         String actual = null;
         try {
-            actual = Theater.statement(invoice, plays);
+            actual = theater.statement(invoice, plays);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

@@ -7,7 +7,7 @@ import java.util.Map;
 
 public class Theater {
 
-    public static String statement(Map<String, Object> invoice,
+    public String statement(Map<String, Object> invoice,
                                    Map<String, Map<String, Object>> plays) throws Exception {
 
         int totalAmount = 0;
@@ -24,28 +24,7 @@ public class Theater {
                 throw new Exception("알 수 없는 playID: " + (String) perf.get("playID"));
             }
 
-            int thisAmount = 0;
-            switch ((String) play.get("type")) {
-
-                case "tragedy":
-                    thisAmount = 40000; // 비극 기본 요금
-                    if ((int) perf.get("audience") > 30) {
-                        // 초과 인원당 1,000원
-                        thisAmount += 1000 * ((int) perf.get("audience") - 30);
-                    }
-                    break;
-
-                case "comedy":
-                    thisAmount = 30000; // 희극 기본 요금
-                    if ((int) perf.get("audience") > 20) {
-                        thisAmount += 10000 + 500 * ((int) perf.get("audience") - 20);
-                    }
-                    thisAmount += 300 * (int) perf.get("audience");
-                    break;
-
-                default:
-                    throw new Exception("알 수 없는 장르: " + play.get("type"));
-            }
+            int thisAmount = amountFor(play, perf);
 
             volumeCredits += Math.max((int) perf.get("audience") - 30, 0);
 
@@ -64,5 +43,33 @@ public class Theater {
         result += "적립 포인트: " + volumeCredits + "점\n";
 
         return result;
+    }
+
+
+    private int amountFor(Map<String, Object> play, Map<String, Object> perf) throws Exception {
+        int thisAmount = 0;
+        switch ((String) play.get("type")) {
+
+            case "tragedy":
+                thisAmount = 40000; // 비극 기본 요금
+                if ((int) perf.get("audience") > 30) {
+                    // 초과 인원당 1,000원
+                    thisAmount += 1000 * ((int) perf.get("audience") - 30);
+                }
+                break;
+
+            case "comedy":
+                thisAmount = 30000; // 희극 기본 요금
+                if ((int) perf.get("audience") > 20) {
+                    thisAmount += 10000 + 500 * ((int) perf.get("audience") - 20);
+                }
+                thisAmount += 300 * (int) perf.get("audience");
+                break;
+
+            default:
+                throw new Exception("알 수 없는 장르: " + play.get("type"));
+        }
+
+        return thisAmount;
     }
 }
