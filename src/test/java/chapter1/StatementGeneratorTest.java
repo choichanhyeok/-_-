@@ -47,7 +47,7 @@ public class StatementGeneratorTest {
         othello.put("type", "tragedy");
         plays.put("othello", othello);
 
-        Theater theater = new Theater(plays);
+        Theater theater = new Theater(plays, invoice);
 
         String actual = null;
         try {

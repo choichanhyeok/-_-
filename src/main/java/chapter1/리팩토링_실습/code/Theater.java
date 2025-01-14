@@ -7,15 +7,16 @@ import java.util.Map;
 
 public class Theater {
     private final Map<String, Map<String, Object>> plays;
+    private final Map<String, Object> invoice;
 
-    public Theater(Map<String, Map<String, Object>> plays) {
+    public Theater(Map<String, Map<String, Object>> plays, Map<String, Object> invoice) {
         this.plays = plays;
+        this.invoice = invoice;
     }
 
     public String statement(Map<String, Object> invoice) throws Exception {
 
         int totalAmount = 0;
-        int volumeCredits = 0;
 
         String result = "청구 내역 (고객명: " + invoice.get("customer") + ")\n";
 
@@ -26,12 +27,6 @@ public class Theater {
                 throw new Exception("알 수 없는 playID: " + (String) perf.get("playID"));
             }
 
-            volumeCredits += Math.max((int) perf.get("audience") - 30, 0);
-
-            if ("comedy".equals(playFor(perf).get("type"))) {
-                volumeCredits += Math.floor((int) perf.get("audience") / 5.0);
-            }
-
             result += " " + (String) playFor(perf).get("name") + ": "
                     + usd(amountFor(perf))
                     + " (" + (int) perf.get("audience") + "석)\n";
@@ -40,9 +35,29 @@ public class Theater {
         }
 
         result += "총액: " + usd(totalAmount) + "\n";
-        result += "적립 포인트: " + volumeCredits + "점\n";
+        result += "적립 포인트: " + totalVolumeCredits() + "점\n";
 
         return result;
+    }
+    private int totalVolumeCredits() {
+        int volumeCredits = 0;
+        for (Map<String, Object> perf : (List<Map<String, Object>>) invoice.get("performances")) {
+
+            volumeCredits += volumeCreditsFor(perf);
+        }
+
+        return volumeCredits;
+    }
+
+    private int volumeCreditsFor(Map<String, Object> aPerformance) {
+        int volumeCredits = 0;
+        volumeCredits += Math.max((int) aPerformance.get("audience") - 30, 0);
+
+        if ("comedy".equals(playFor(aPerformance).get("type"))) {
+            volumeCredits += Math.floor((int) aPerformance.get("audience") / 5.0);
+        }
+
+        return volumeCredits;
     }
 
 
