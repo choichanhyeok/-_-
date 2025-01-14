@@ -33,13 +33,13 @@ public class Theater {
 
         }
 
-        result += "총액: " + usd(appleSauce()) + "\n";
+        result += "총액: " + usd(totalAmount()) + "\n";
         result += "적립 포인트: " + totalVolumeCredits() + "점\n";
 
         return result;
     }
 
-    private int appleSauce() throws Exception {
+    private int totalAmount() throws Exception {
         int totalAmount = 0;
 
         for (Map<String, Object> perf : (List<Map<String, Object>>) invoice.get("performances")) {
@@ -51,13 +51,13 @@ public class Theater {
 
 
     private int totalVolumeCredits() {
-        int volumeCredits = 0;
+        int result = 0;
         for (Map<String, Object> perf : (List<Map<String, Object>>) invoice.get("performances")) {
 
-            volumeCredits += volumeCreditsFor(perf);
+            result += volumeCreditsFor(perf);
         }
 
-        return volumeCredits;
+        return result;
     }
 
     private int volumeCreditsFor(Map<String, Object> aPerformance) {
