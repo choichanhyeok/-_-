@@ -31,14 +31,27 @@ public class Theater {
                     + usd(amountFor(perf))
                     + " (" + (int) perf.get("audience") + "석)\n";
 
-            totalAmount += amountFor(perf);
         }
+
+        totalAmount = appleSauce();
 
         result += "총액: " + usd(totalAmount) + "\n";
         result += "적립 포인트: " + totalVolumeCredits() + "점\n";
 
         return result;
     }
+
+    private int appleSauce() throws Exception {
+        int totalAmount = 0;
+
+        for (Map<String, Object> perf : (List<Map<String, Object>>) invoice.get("performances")) {
+            totalAmount += amountFor(perf);
+        }
+
+        return totalAmount;
+    }
+
+
     private int totalVolumeCredits() {
         int volumeCredits = 0;
         for (Map<String, Object> perf : (List<Map<String, Object>>) invoice.get("performances")) {
