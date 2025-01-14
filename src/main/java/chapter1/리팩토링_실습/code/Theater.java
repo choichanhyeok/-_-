@@ -46,24 +46,24 @@ public class Theater {
     }
 
 
-    private int amountFor(Map<String, Object> play, Map<String, Object> perf) throws Exception {
+    private int amountFor(Map<String, Object> play, Map<String, Object> aPerformance) throws Exception {
         int result = 0;
         switch ((String) play.get("type")) {
 
             case "tragedy":
                 result = 40000; // 비극 기본 요금
-                if ((int) perf.get("audience") > 30) {
+                if ((int) aPerformance.get("audience") > 30) {
                     // 초과 인원당 1,000원
-                    result += 1000 * ((int) perf.get("audience") - 30);
+                    result += 1000 * ((int) aPerformance.get("audience") - 30);
                 }
                 break;
 
             case "comedy":
                 result = 30000; // 희극 기본 요금
-                if ((int) perf.get("audience") > 20) {
-                    result += 10000 + 500 * ((int) perf.get("audience") - 20);
+                if ((int) aPerformance.get("audience") > 20) {
+                    result += 10000 + 500 * ((int) aPerformance.get("audience") - 20);
                 }
-                result += 300 * (int) perf.get("audience");
+                result += 300 * (int) aPerformance.get("audience");
                 break;
 
             default:
