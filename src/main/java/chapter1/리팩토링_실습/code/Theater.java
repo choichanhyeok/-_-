@@ -15,9 +15,12 @@ public class Theater {
     }
 
     public String statement() throws Exception {
-
         int totalAmount = 0;
 
+        return renderPlainText();
+    }
+
+    private String renderPlainText() throws Exception {
         String result = "청구 내역 (고객명: " + invoice.get("customer") + ")\n";
 
 
