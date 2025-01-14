@@ -27,8 +27,6 @@ public class Theater {
                 throw new Exception("알 수 없는 playID: " + (String) perf.get("playID"));
             }
 
-            int thisAmount = amountFor(perf);
-
             volumeCredits += Math.max((int) perf.get("audience") - 30, 0);
 
             if ("comedy".equals(playFor(perf).get("type"))) {
@@ -36,10 +34,10 @@ public class Theater {
             }
 
             result += " " + (String) playFor(perf).get("name") + ": "
-                    + format.format(thisAmount / 100.0)
+                    + format.format(amountFor(perf) / 100.0)
                     + " (" + (int) perf.get("audience") + "석)\n";
 
-            totalAmount += thisAmount;
+            totalAmount += amountFor(perf);
         }
 
         result += "총액: " + format.format(totalAmount / 100.0) + "\n";
