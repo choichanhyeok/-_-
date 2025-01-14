@@ -18,7 +18,6 @@ public class Theater {
         int volumeCredits = 0;
 
         String result = "청구 내역 (고객명: " + invoice.get("customer") + ")\n";
-        NumberFormat format = NumberFormat.getCurrencyInstance(Locale.US);
 
 
         for (Map<String, Object> perf : (List<Map<String, Object>>) invoice.get("performances")) {
@@ -34,13 +33,13 @@ public class Theater {
             }
 
             result += " " + (String) playFor(perf).get("name") + ": "
-                    + format.format(amountFor(perf) / 100.0)
+                    + NumberFormat.getCurrencyInstance(Locale.US).format(amountFor(perf) / 100.0)
                     + " (" + (int) perf.get("audience") + "석)\n";
 
             totalAmount += amountFor(perf);
         }
 
-        result += "총액: " + format.format(totalAmount / 100.0) + "\n";
+        result += "총액: " + NumberFormat.getCurrencyInstance(Locale.US).format(totalAmount / 100.0) + "\n";
         result += "적립 포인트: " + volumeCredits + "점\n";
 
         return result;
