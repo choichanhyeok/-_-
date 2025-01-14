@@ -14,7 +14,7 @@ public class Theater {
         this.invoice = invoice;
     }
 
-    public String statement(Map<String, Object> invoice) throws Exception {
+    public String statement() throws Exception {
 
         int totalAmount = 0;
 

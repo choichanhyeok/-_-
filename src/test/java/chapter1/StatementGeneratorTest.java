@@ -51,7 +51,7 @@ public class StatementGeneratorTest {
 
         String actual = null;
         try {
-            actual = theater.statement(invoice);
+            actual = theater.statement();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
