@@ -106,11 +106,6 @@ public class Theater {
         return result;
     }
 
-    private String playFor(Performance aPerformance) {
-
-        return aPerformance.getPlayId();
-    }
-
     private String usd(int aNumber) {
         return NumberFormat.getCurrencyInstance(Locale.US).format(aNumber / 100.0);
     }
