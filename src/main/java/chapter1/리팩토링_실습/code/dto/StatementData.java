@@ -8,8 +8,9 @@ public class StatementData {
     private String customer;
     private List<Performance> performances;
 
-    public StatementData(List<Performance> performances) {
+    public StatementData(List<Performance> performances, String customer) {
         this.performances = performances;
+        this.customer = customer;
     }
 
     public String getCustomer() {
