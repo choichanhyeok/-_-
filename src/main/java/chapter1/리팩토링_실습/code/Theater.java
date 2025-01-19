@@ -17,10 +17,10 @@ public class Theater {
     public String statement(Invoice invoice, Plays plays) throws Exception {
         StatementData statementData = new StatementData(invoice.getPerformances(), invoice.getCustomer());
 
-        return renderPlainText(statementData, invoice, plays);
+        return renderPlainText(statementData, plays);
     }
 
-    private String renderPlainText(StatementData data, Invoice invoice, Plays plays) throws Exception {
+    private String renderPlainText(StatementData data, Plays plays) throws Exception {
         String result = "청구 내역 (고객명: " + data.getCustomer() + ")\n";
 
 
@@ -37,19 +37,19 @@ public class Theater {
         }
 
         result += "총액: "
-                + usd(totalAmount(invoice, plays))
+                + usd(totalAmount(data, plays))
                 + "\n";
         result += "적립 포인트: "
-                + totalVolumeCredits(invoice, plays)
+                + totalVolumeCredits(data, plays)
                 + "점\n";
 
         return result;
     }
 
-    private int totalAmount(Invoice invoice, Plays plays) throws Exception {
+    private int totalAmount(StatementData data, Plays plays) throws Exception {
         int totalAmount = 0;
 
-        for (Performance perf: invoice.getPerformances()) {
+        for (Performance perf: data.getPerformances()) {
             totalAmount += amountFor(perf, plays.getPlayMap(perf.getPlayId()));
         }
 
@@ -57,9 +57,9 @@ public class Theater {
     }
 
 
-    private int totalVolumeCredits(Invoice invoice, Plays plays) {
+    private int totalVolumeCredits(StatementData data, Plays plays) {
         int result = 0;
-        for (Performance perf : invoice.getPerformances()) {
+        for (Performance perf : data.getPerformances()) {
 
             result += volumeCreditsFor(perf, plays.getPlayMap(perf.getPlayId()));
         }
