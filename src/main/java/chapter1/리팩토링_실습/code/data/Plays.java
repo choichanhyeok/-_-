@@ -13,8 +13,8 @@ public class Plays {
         this.playMap = playMap;
     }
 
-    public Map<String, Play> getPlayMap() {
-        return playMap;
+    public Play getPlayMap(String playId) {
+        return playMap.get(playId);
     }
 
 }
