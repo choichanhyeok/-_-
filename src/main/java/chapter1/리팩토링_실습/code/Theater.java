@@ -1,5 +1,9 @@
 package chapter1.리팩토링_실습.code;
 
+import chapter1.리팩토링_실습.code.data.Invoice;
+import chapter1.리팩토링_실습.code.data.Performance;
+import chapter1.리팩토링_실습.code.data.Play;
+import chapter1.리팩토링_실습.code.data.Plays;
 import chapter1.리팩토링_실습.code.dto.StatementData;
 
 import java.text.NumberFormat;
@@ -9,105 +13,102 @@ import java.util.Locale;
 import java.util.Map;
 
 public class Theater {
-    private final Map<String, Map<String, Object>> plays;
-    private final Map<String, Object> invoice;
 
-    public Theater(Map<String, Map<String, Object>> plays, Map<String, Object> invoice) {
-        this.plays = plays;
-        this.invoice = invoice;
+    public String statement(Invoice invoice, Plays plays) throws Exception {
+        StatementData statementData = new StatementData(invoice.getPerformances(), invoice.getCustomer());
+
+        return renderPlainText(statementData, invoice, plays);
     }
 
-    public String statement() throws Exception {
-        StatementData statementData = new StatementData();
-
-        return renderPlainText(statementData);
-    }
-
-    private String renderPlainText(StatementData data) throws Exception {
-        String result = "청구 내역 (고객명: " + invoice.get("customer") + ")\n";
+    private String renderPlainText(StatementData data, Invoice invoice, Plays plays) throws Exception {
+        String result = "청구 내역 (고객명: " + data.getCustomer() + ")\n";
 
 
-        for (Map<String, Object> perf : (List<Map<String, Object>>) invoice.get("performances")) {
+        for (Performance perf : data.getPerformances()) {
+            Play play = plays.getPlayMap(perf.getPlayId());
 
-            if (playFor(perf) == null) {
-                throw new Exception("알 수 없는 playID: " + (String) perf.get("playID"));
-            }
-
-            result += " " + (String) playFor(perf).get("name") + ": "
-                    + usd(amountFor(perf))
-                    + " (" + (int) perf.get("audience") + "석)\n";
+            result += " "
+                    + play.getName()
+                    + ": "
+                    + usd(amountFor(perf, play))
+                    + " (" + perf.getAudience()
+                    + "석)\n";
 
         }
 
-        result += "총액: " + usd(totalAmount()) + "\n";
-        result += "적립 포인트: " + totalVolumeCredits() + "점\n";
+        result += "총액: "
+                + usd(totalAmount(invoice, plays))
+                + "\n";
+        result += "적립 포인트: "
+                + totalVolumeCredits(invoice, plays)
+                + "점\n";
 
         return result;
     }
 
-    private int totalAmount() throws Exception {
+    private int totalAmount(Invoice invoice, Plays plays) throws Exception {
         int totalAmount = 0;
 
-        for (Map<String, Object> perf : (List<Map<String, Object>>) invoice.get("performances")) {
-            totalAmount += amountFor(perf);
+        for (Performance perf: invoice.getPerformances()) {
+            totalAmount += amountFor(perf, plays.getPlayMap(perf.getPlayId()));
         }
 
         return totalAmount;
     }
 
 
-    private int totalVolumeCredits() {
+    private int totalVolumeCredits(Invoice invoice, Plays plays) {
         int result = 0;
-        for (Map<String, Object> perf : (List<Map<String, Object>>) invoice.get("performances")) {
+        for (Performance perf : invoice.getPerformances()) {
 
-            result += volumeCreditsFor(perf);
+            result += volumeCreditsFor(perf, plays.getPlayMap(perf.getPlayId()));
         }
 
         return result;
     }
 
-    private int volumeCreditsFor(Map<String, Object> aPerformance) {
+    private int volumeCreditsFor(Performance aPerformance, Play play) {
         int volumeCredits = 0;
-        volumeCredits += Math.max((int) aPerformance.get("audience") - 30, 0);
+        volumeCredits += Math.max(aPerformance.getAudience() - 30, 0);
 
-        if ("comedy".equals(playFor(aPerformance).get("type"))) {
-            volumeCredits += Math.floor((int) aPerformance.get("audience") / 5.0);
+        if ("comedy".equals(play.getType())) {
+            volumeCredits += Math.floor(aPerformance.getAudience() / 5.0);
         }
 
         return volumeCredits;
     }
 
 
-    private int amountFor(Map<String, Object> aPerformance) throws Exception {
+    private int amountFor(Performance aPerformance, Play play) throws Exception {
         int result = 0;
-        switch ((String) playFor(aPerformance).get("type")) {
+        switch (play.getType()) {
 
             case "tragedy":
                 result = 40000; // 비극 기본 요금
-                if ((int) aPerformance.get("audience") > 30) {
+                if (aPerformance.getAudience() > 30) {
                     // 초과 인원당 1,000원
-                    result += 1000 * ((int) aPerformance.get("audience") - 30);
+                    result += 1000 * (aPerformance.getAudience() - 30);
                 }
                 break;
 
             case "comedy":
                 result = 30000; // 희극 기본 요금
-                if ((int) aPerformance.get("audience") > 20) {
-                    result += 10000 + 500 * ((int) aPerformance.get("audience") - 20);
+                if (aPerformance.getAudience() > 20) {
+                    result += 10000 + 500 * (aPerformance.getAudience() - 20);
                 }
-                result += 300 * (int) aPerformance.get("audience");
+                result += 300 * aPerformance.getAudience();
                 break;
 
             default:
-                throw new Exception("알 수 없는 장르: " + playFor(aPerformance).get("type"));
+                throw new Exception("알 수 없는 장르: " + play.getType());
         }
 
         return result;
     }
 
-    private Map<String, Object> playFor(Map<String, Object> aPerformance) {
+    private String playFor(Performance aPerformance) {
 
-        return plays.get(aPerformance.get("playID"));
+        return aPerformance.getPlayId();
     }
 
     private String usd(int aNumber) {
