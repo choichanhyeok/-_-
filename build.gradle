@@ -13,7 +13,7 @@ dependencies {
     // JUnit 5 테스트 라이브러리
     testImplementation 'org.junit.jupiter:junit-jupiter:5.9.3'
 }
-가
+
 test {
     useJUnitPlatform()
 }
