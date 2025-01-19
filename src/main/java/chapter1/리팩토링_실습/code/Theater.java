@@ -4,6 +4,7 @@ import chapter1.리팩토링_실습.code.data.Invoice;
 import chapter1.리팩토링_실습.code.data.Performance;
 import chapter1.리팩토링_실습.code.data.Play;
 import chapter1.리팩토링_실습.code.data.Plays;
+import chapter1.리팩토링_실습.code.dto.EnrichedPerformance;
 import chapter1.리팩토링_실습.code.dto.StatementData;
 
 import java.text.NumberFormat;
@@ -44,6 +45,21 @@ public class Theater {
                 + "점\n";
 
         return result;
+    }
+
+
+    private EnrichedPerformance enrichPerformance(Performance perf, Play play) throws Exception {
+        int calculatedAmount = amountFor(perf, play);
+        int calculatedCredits = volumeCreditsFor(perf, play);
+
+        return new EnrichedPerformance(
+                perf.getPlayId(),
+                perf.getAudience(),
+                calculatedAmount,
+                calculatedCredits,
+                play.getName(),
+                play.getType()
+        );
     }
 
     private int totalAmount(StatementData data, Plays plays) throws Exception {
