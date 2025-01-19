@@ -1,6 +1,9 @@
 package chapter1.리팩토링_실습.code;
 
+import chapter1.리팩토링_실습.code.dto.StatementData;
+
 import java.text.NumberFormat;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -15,11 +18,12 @@ public class Theater {
     }
 
     public String statement() throws Exception {
+        StatementData statementData = new StatementData();
 
-        return renderPlainText();
+        return renderPlainText(statementData);
     }
 
-    private String renderPlainText() throws Exception {
+    private String renderPlainText(StatementData data) throws Exception {
         String result = "청구 내역 (고객명: " + invoice.get("customer") + ")\n";
 
 
